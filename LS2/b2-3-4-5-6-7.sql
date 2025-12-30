@@ -25,11 +25,11 @@ create table teachers (
 CREATE TABLE students (
 	student_id int auto_increment primary key,
     full_name varchar(50) not null,
-    date_of_birth date not null,
+    date_of_birth date,
     gpa decimal(3,2) check(gpa >= 0),
 	phoneNumber char(10) unique,
     gmail varchar(50) unique,
-    `profile` blob not null,
+    profile blob,
     class_id int not null,
     foreign key(class_id) references classes(class_id)
 );
