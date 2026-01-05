@@ -1,0 +1,74 @@
+CREATE DATABASE quan_ly_ban_hang;
+USE quan_ly_ban_hang;
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(100)
+);
+
+CREATE TABLE products (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_name VARCHAR(100),
+    unit_price DECIMAL(10,2)
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    order_date DATE,
+    total_amount DECIMAL(10,2),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+CREATE TABLE order_items (
+    order_item_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    unit_price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+INSERT INTO customers (customer_name) VALUES
+('Nguyễn Văn A'),
+('Trần Thị B'),
+('Lê Văn C');
+
+INSERT INTO products (product_name, unit_price) VALUES
+('Laptop', 15000000),
+('Chuột', 200000),
+('Bàn phím', 500000);
+
+INSERT INTO orders (customer_id, order_date) VALUES
+(1, '2024-01-01'),
+(1, '2024-01-05'),
+(2, '2024-01-10'),
+(3, '2024-01-12');
+
+INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
+(1, 1, 1, 15000000),
+(1, 2, 2, 200000),
+(2, 3, 1, 500000),
+(3, 1, 1, 15000000),
+(3, 3, 2, 500000),
+(4, 2, 3, 200000);
+
+
+
+SELECT 
+    order_date AS ngay_dat_hang,
+    COUNT(order_id) AS so_luong_don_hang,
+    SUM(total_amount) AS tong_doanh_thu
+FROM orders
+WHERE status = 'completed'
+GROUP BY order_date
+HAVING SUM(total_amount) > 10000000
+ORDER BY order_date ASC;
+
+
+SELECT order_date, SUM(total_amount) AS daily_revenue
+FROM orders
+GROUP BY order_date
+HAVING SUM(total_amount) > 10000000;
+
